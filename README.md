@@ -51,9 +51,9 @@ src/
     SlotCard.tsx      one live project
     ComingUp.tsx      deadlines, with add and remove
     AreaView.tsx      one area's projects
-    ProjectCard.tsx   one project: name, next step, stage, live switch
+    ProjectCard.tsx   a project in its area list: name (links to its page), live switch, next step, status
     ProjectControls.tsx  next step, stage and live switch, shared by card and page
-    ProjectPage.tsx   /project/[id]
+    ProjectPage.tsx   /project/[id]: rename, describe, delete, status, notes
     NotePage.tsx      /note/[id]
     NoteEditor.tsx    the Tiptap editor: toolbar, Markdown shortcuts, autosave
     SearchPalette.tsx Cmd/Ctrl+K: search projects and notes, jump to one

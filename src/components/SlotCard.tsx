@@ -17,7 +17,7 @@ export function SlotCard({
 }) {
   return (
     <article
-      className={`area-${project.area} flex min-h-[340px] min-w-0 flex-col gap-[18px] rounded-[28px] bg-area-soft p-7`}
+      className={`area-${project.area} flex min-w-0 flex-col gap-4 rounded-3xl bg-area-soft p-5 md:gap-[18px] md:rounded-[28px] md:p-7 lg:min-h-[340px]`}
     >
       <div className="flex items-center justify-between">
         <span className="inline-flex items-center gap-2 text-[13px] font-semibold text-area-ink">
@@ -30,10 +30,10 @@ export function SlotCard({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <h2 className="font-display text-[32px] leading-[1.05] font-bold tracking-[-0.02em]">
+        <h2 className="font-display text-[28px] leading-[1.05] font-bold tracking-[-0.02em] md:text-[32px]">
           <Link
             href={`/project/${project.id}`}
-            className="-my-1.5 inline-block py-1.5 decoration-2 underline-offset-4 hover:underline"
+            className="-my-2 inline-block py-2 decoration-2 underline-offset-4 hover:underline"
           >
             {project.name || "Untitled"}
           </Link>
@@ -41,35 +41,31 @@ export function SlotCard({
         {project.note && <p className="text-sm text-muted">{project.note}</p>}
       </div>
 
-      <label className="mt-auto flex flex-col gap-2">
-        <span className="eyebrow text-area-ink">Next step</span>
+      <div className="mt-auto flex flex-col gap-2">
+        <div className="flex min-h-6 items-center justify-between gap-2">
+          <span className="eyebrow text-area-ink">Next step</span>
+          {isStale(project, today) ? (
+            <span className="pill">Stale · {daysSinceTouched(project, today)} days</span>
+          ) : (
+            <span className="font-mono text-xs text-muted">
+              {touchedLabel(daysSinceTouched(project, today))}
+            </span>
+          )}
+        </div>
         <StepInput
           className="rounded-[14px] bg-surface text-[17px] font-medium [--grow-px:16px] [--grow-py:13px]"
           value={project.nextStep}
           onChange={(nextStep) => updateProject(project.id, { nextStep })}
         />
-      </label>
+      </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2.5">
-        <div className="flex gap-1.5">
-          <button type="button" className="btn btn-solid" onClick={() => completeStep(project.id)}>
-            Did it
-          </button>
-          <button
-            type="button"
-            className="btn btn-quiet"
-            onClick={() => setActive(project.id, false)}
-          >
-            Park
-          </button>
-        </div>
-        {isStale(project, today) ? (
-          <span className="pill">Stale · {daysSinceTouched(project, today)} days</span>
-        ) : (
-          <span className="font-mono text-xs text-muted">
-            {touchedLabel(daysSinceTouched(project, today))}
-          </span>
-        )}
+      <div className="flex gap-1.5">
+        <button type="button" className="btn btn-solid" onClick={() => completeStep(project.id)}>
+          Did it
+        </button>
+        <button type="button" className="btn btn-quiet" onClick={() => setActive(project.id, false)}>
+          Park
+        </button>
       </div>
     </article>
   );
@@ -77,7 +73,7 @@ export function SlotCard({
 
 export function EmptySlot({ number }: { number: string }) {
   return (
-    <div className="flex min-h-[340px] min-w-0 flex-col gap-[18px] rounded-[28px] border-2 border-dashed border-line p-7">
+    <div className="flex min-h-[180px] min-w-0 flex-col gap-4 rounded-3xl border-2 border-dashed border-line p-5 md:gap-[18px] md:rounded-[28px] md:p-7 lg:min-h-[340px]">
       <div className="flex justify-end">
         <span className="font-display text-[28px] leading-none font-[750] text-muted">{number}</span>
       </div>

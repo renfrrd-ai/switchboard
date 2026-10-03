@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { AREA_BY_ID, MAX_ACTIVE } from "@/lib/areas";
 import { todayISO } from "@/lib/dates";
 import { areaNotes, useNotes } from "@/lib/notes";
@@ -11,7 +11,7 @@ import { NoteList } from "./NoteList";
 import { ProjectCard } from "./ProjectCard";
 
 export function AreaView({ board, areaId }: { board: Board; areaId: AreaId }) {
-  const [freshId, setFreshId] = useState<string | null>(null);
+  const router = useRouter();
   const notes = useNotes();
   const area = AREA_BY_ID[areaId];
   const today = todayISO();
@@ -20,12 +20,14 @@ export function AreaView({ board, areaId }: { board: Board; areaId: AreaId }) {
   const slotsFull = activeCount(board) >= MAX_ACTIVE;
 
   const countWord = projects.length === 1 ? "1 project" : `${projects.length} projects`;
-  const summary = area.alwaysOn ? `${countWord}, always on` : `${countWord}, ${live} live`;
+  const summary = area.alwaysOn
+    ? `${countWord}, always on`
+    : `${countWord}, ${live} live${slotsFull ? " · all slots in use" : ""}`;
 
   return (
-    <section className={`area-${areaId} flex flex-col gap-7`}>
-      <div className="flex flex-wrap items-end justify-between gap-5">
-        <div className="flex flex-col gap-3">
+    <section className={`area-${areaId} flex flex-col gap-7 md:gap-9`}>
+      <div className="flex flex-wrap items-end justify-between gap-x-5 gap-y-4">
+        <div className="flex min-w-0 flex-col gap-3">
           <div className="inline-flex items-center gap-2 font-mono text-[13px] text-area-ink">
             <span className="dot" />
             {summary}
@@ -37,21 +39,15 @@ export function AreaView({ board, areaId }: { board: Board; areaId: AreaId }) {
         <button
           type="button"
           className="btn btn-solid"
-          onClick={() => setFreshId(addProject(areaId))}
+          onClick={() => router.push(`/project/${addProject(areaId)}`)}
         >
           <PlusIcon />
           Add a project
         </button>
       </div>
 
-      {slotsFull && !area.alwaysOn && (
-        <p className="text-sm text-muted">
-          All three slots are live. Park one to switch another on.
-        </p>
-      )}
-
       {projects.length > 0 ? (
-        <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           {projects.map((project) => (
             <ProjectCard
               key={project.id}
@@ -59,7 +55,7 @@ export function AreaView({ board, areaId }: { board: Board; areaId: AreaId }) {
               today={today}
               alwaysOn={area.alwaysOn}
               slotsFull={slotsFull}
-              focusName={project.id === freshId}
+              noteCount={notes ? notes.filter((n) => n.projectId === project.id).length : 0}
             />
           ))}
         </div>

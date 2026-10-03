@@ -34,7 +34,7 @@ export function Home({
         )}
       </section>
 
-      <section aria-label="Active slots" className="grid grid-cols-[repeat(auto-fit,minmax(290px,1fr))] gap-4">
+      <section aria-label="Active slots" className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {Array.from({ length: MAX_ACTIVE }, (_, i) => {
           const project = slotted[i];
           const number = `0${i + 1}`;
@@ -48,7 +48,7 @@ export function Home({
 
       <section className="flex flex-wrap items-start gap-4">
         <ComingUp upcoming={upcoming} />
-        <div className="grid min-w-0 flex-[2_1_520px] grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+        <div className="grid min-w-0 flex-[2_1_520px] grid-cols-2 gap-3 sm:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           {AREAS.map((area) => {
             const mine = board.projects.filter((p) => p.area === area.id);
             return (
@@ -56,10 +56,10 @@ export function Home({
                 key={area.id}
                 type="button"
                 onClick={() => onOpenArea(area.id)}
-                className={`area-${area.id} flex min-h-[132px] flex-col gap-3.5 rounded-[20px] bg-area-soft p-5 text-left transition-transform hover:-translate-y-0.5`}
+                className={`area-${area.id} flex min-h-[72px] min-w-0 flex-col gap-3.5 rounded-[20px] bg-area-soft p-4 text-left transition-transform hover:-translate-y-0.5 sm:min-h-[132px] sm:p-5`}
               >
                 <span className="flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-2 text-sm font-semibold text-area-ink">
+                  <span className="inline-flex min-w-0 items-center gap-2 truncate text-sm font-semibold text-area-ink">
                     <span className="dot" />
                     {area.label}
                   </span>
@@ -67,7 +67,7 @@ export function Home({
                     {mine.length}
                   </span>
                 </span>
-                <span className="mt-auto text-[13px] leading-[1.45] text-muted">
+                <span className="mt-auto hidden text-[13px] leading-[1.45] text-muted sm:block">
                   {mine.length
                     ? mine.map((p) => p.name || "Untitled").join(" · ")
                     : "Nothing here yet"}

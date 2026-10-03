@@ -1,18 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AREA_BY_ID, MAX_ACTIVE } from "@/lib/areas";
 import { todayISO, touchedLabel } from "@/lib/dates";
 import { daysSinceTouched, isStale } from "@/lib/derive";
 import { projectNotes, useNotes } from "@/lib/notes";
-import { activeCount, updateProject, useBoard } from "@/lib/store";
+import { activeCount, removeProject, updateProject, useBoard } from "@/lib/store";
 import { BackLink } from "./BackLink";
+import { TrashIcon } from "./icons";
 import { NoteList } from "./NoteList";
 import { NotFound } from "./NotFound";
 import { PageShell } from "./PageShell";
-import { LiveControl, NextStepField, StageControl } from "./ProjectControls";
+import { LiveControl, NextStepField, StageControl, confirmDeleteProject } from "./ProjectControls";
 
+/** Laid out like the note page: Back and delete, where it lives, the name, then the content. */
 export function ProjectPage({ id }: { id: string }) {
+  const router = useRouter();
   const board = useBoard();
   const notes = useNotes();
   if (!board || !notes) return <PageShell />;
@@ -21,29 +25,52 @@ export function ProjectPage({ id }: { id: string }) {
   if (!project) return <NotFound what="project" />;
 
   const area = AREA_BY_ID[project.area];
+  const areaHref = `/?tab=${project.area}`;
   const today = todayISO();
   const label = project.name || "this project";
-  const slotsFull = activeCount(board) >= MAX_ACTIVE;
+  const mine = projectNotes(notes, project.id);
 
   return (
     <PageShell>
       <title>{`${project.name || "Untitled"} · Switchboard`}</title>
-      <div className={`area-${project.area} flex flex-col gap-7`}>
-        <BackLink fallback={`/?tab=${project.area}`} />
-
-        <section className="flex flex-col gap-3">
-          <Link
-            href={`/?tab=${project.area}`}
-            className="inline-flex min-h-11 items-center gap-2 self-start font-mono text-[13px] text-area-ink hover:underline"
+      <article className={`area-${project.area} mx-auto flex w-full max-w-[760px] flex-col gap-5`}>
+        <div className="flex items-center justify-between gap-3">
+          <BackLink fallback={areaHref} />
+          <button
+            type="button"
+            className="btn btn-quiet btn-round text-muted"
+            aria-label={`Delete ${label}`}
+            onClick={() => {
+              if (confirmDeleteProject(label, mine.length)) {
+                removeProject(project.id);
+                router.replace(areaHref);
+              }
+            }}
           >
-            <span className="dot" />
-            {area.label}
-          </Link>
+            <TrashIcon />
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <div className="flex flex-wrap items-center justify-between gap-x-4">
+            <Link
+              href={areaHref}
+              className="inline-flex min-h-11 items-center gap-2 font-mono text-[13px] text-area-ink hover:underline"
+            >
+              <span className="dot" />
+              {area.label}
+            </Link>
+            <span className="flex items-center gap-2 font-mono text-xs text-muted">
+              {isStale(project, today) && <span className="pill">Stale</span>}
+              {touchedLabel(daysSinceTouched(project, today))}
+            </span>
+          </div>
           <input
             type="text"
-            className="-mx-2 min-h-11 w-[calc(100%+16px)] rounded-xl border border-transparent bg-transparent px-2 font-display text-[clamp(36px,6vw,64px)] leading-[1.05] font-[750] tracking-[-0.03em] placeholder:text-muted focus:border-focus focus:outline-none"
+            className="-mx-2 min-h-11 w-[calc(100%+16px)] rounded-xl border border-transparent bg-transparent px-2 font-display text-[clamp(32px,5vw,48px)] leading-[1.1] font-[750] tracking-[-0.025em] placeholder:text-muted focus:border-focus focus:outline-none"
             aria-label="Project name"
             placeholder="Name it"
+            autoFocus={!project.name}
             value={project.name}
             onChange={(e) => updateProject(project.id, { name: e.target.value })}
           />
@@ -55,41 +82,37 @@ export function ProjectPage({ id }: { id: string }) {
             value={project.note}
             onChange={(e) => updateProject(project.id, { note: e.target.value })}
           />
-        </section>
+        </div>
 
         <section
-          className={`flex flex-col gap-4 rounded-[20px] border bg-surface p-[18px] md:p-6 ${
+          aria-label="Status"
+          className={`flex flex-col gap-3 rounded-[20px] border bg-surface p-4 md:p-5 ${
             project.active && !area.alwaysOn ? "border-area" : "border-line"
           }`}
         >
-          <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-3">
             <span className="eyebrow text-area-ink">Next step</span>
-            <NextStepField project={project} label={label} />
-          </div>
-          <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-              <StageControl project={project} />
-              <span className="font-mono text-xs text-muted">
-                {touchedLabel(daysSinceTouched(project, today))}
-              </span>
-              {isStale(project, today) && <span className="pill">Stale</span>}
-            </div>
             <LiveControl
               project={project}
               label={label}
               alwaysOn={area.alwaysOn}
-              slotsFull={slotsFull}
-              stacked={false}
+              slotsFull={activeCount(board) >= MAX_ACTIVE}
             />
+          </div>
+          <NextStepField project={project} label={label} />
+          <div className="-mb-1.5">
+            <StageControl project={project} />
           </div>
         </section>
 
-        <NoteList
-          notes={projectNotes(notes, project.id)}
-          owner={{ projectId: project.id }}
-          emptyText="No notes yet. Plans, links, meeting notes and checklists for this project go here."
-        />
-      </div>
+        <div className="mt-4">
+          <NoteList
+            notes={mine}
+            owner={{ projectId: project.id }}
+            emptyText="No notes yet. Plans, links, meeting notes and checklists for this project go here."
+          />
+        </div>
+      </article>
     </PageShell>
   );
 }

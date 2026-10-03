@@ -83,10 +83,6 @@ export function areaNotes(all: Note[], area: AreaId): Note[] {
   return all.filter((n) => n.projectId === null && n.area === area).sort(byUpdated);
 }
 
-export function countProjectNotes(projectId: string): number {
-  return current().filter((n) => n.projectId === projectId).length;
-}
-
 export function addNote(owner: { projectId: string } | { area: AreaId }): string {
   const now = new Date().toISOString();
   const note: Note = {

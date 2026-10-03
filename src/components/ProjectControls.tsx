@@ -58,39 +58,37 @@ export function StageControl({ project }: { project: Project }) {
   );
 }
 
-/** The live/parked switch, or the "Always on" label in always-on areas. */
+/** The Live/Parked label and switch, or "Always on" in always-on areas. */
 export function LiveControl({
   project,
   label,
   alwaysOn,
   slotsFull,
-  stacked = true,
 }: {
   project: Project;
   label: string;
   alwaysOn: boolean;
   slotsFull: boolean;
-  /** Put the Live/Parked label under the switch on wide screens. */
-  stacked?: boolean;
 }) {
   if (alwaysOn) {
     return (
-      <span className="eyebrow inline-flex min-h-11 items-center gap-2 text-area-ink">
+      <span className="eyebrow inline-flex min-h-11 flex-none items-center gap-2 text-area-ink">
         <span className="dot" />
         Always on
       </span>
     );
   }
+  const blocked = !project.active && slotsFull;
   return (
-    <div
-      className={`flex items-center gap-2 ${stacked ? "md:flex-col md:items-end md:gap-0" : ""}`}
-    >
+    <div className="flex flex-none items-center gap-1.5">
+      <span className="eyebrow text-muted">{project.active ? "Live" : "Parked"}</span>
       <button
         type="button"
         role="switch"
         aria-checked={project.active}
         aria-label={`${label} is live`}
-        disabled={!project.active && slotsFull}
+        title={blocked ? "All three slots are live. Park one first." : undefined}
+        disabled={blocked}
         onClick={() => setActive(project.id, !project.active)}
         className="grid h-11 w-[52px] flex-none place-items-center"
       >
@@ -106,7 +104,6 @@ export function LiveControl({
           />
         </span>
       </button>
-      <span className="eyebrow text-muted">{project.active ? "Live" : "Parked"}</span>
     </div>
   );
 }
