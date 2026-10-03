@@ -103,6 +103,11 @@ button:disabled {
   outline-offset: 2px;
 }
 
+/* The caret shows focus in the note editor; a ring around the whole page of text is noise. */
+.note-body:focus-visible {
+  outline: none;
+}
+
 /* ── Shared pieces ──────────────────────────────────────────────────────── */
 
 @layer components {
@@ -240,5 +245,159 @@ button:disabled {
     font-size: 11px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+
+  /* ── Note body (the Tiptap editor) ── */
+
+  .note-body {
+    min-height: 40vh;
+    padding-bottom: 96px;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    outline: none;
+  }
+
+  .note-body > * + * {
+    margin-top: 0.75em;
+  }
+
+  .note-body h1,
+  .note-body h2,
+  .note-body h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .note-body h1 { margin-top: 1.4em; font-size: 30px; }
+  .note-body h2 { margin-top: 1.3em; font-size: 24px; }
+  .note-body h3 { margin-top: 1.2em; font-size: 19px; }
+  .note-body > :first-child { margin-top: 0; }
+
+  .note-body strong { font-weight: 650; }
+
+  .note-body a {
+    color: var(--focus);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .note-body code {
+    padding: 0.1em 0.35em;
+    border-radius: 6px;
+    background: var(--sunk);
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+  }
+
+  .note-body pre {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--sunk);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+  }
+
+  .note-body pre code {
+    padding: 0;
+    background: none;
+    font-size: inherit;
+  }
+
+  .note-body blockquote {
+    padding-left: 16px;
+    border-left: 3px solid var(--a);
+    color: var(--muted);
+  }
+
+  .note-body hr {
+    margin: 1.5em 0;
+    border: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .note-body hr.ProseMirror-selectednode {
+    border-top-color: var(--focus);
+  }
+
+  .note-body ul,
+  .note-body ol {
+    padding-left: 1.4em;
+  }
+
+  .note-body ul { list-style: disc; }
+  .note-body ol { list-style: decimal; }
+  .note-body li + li,
+  .note-body li > * + * { margin-top: 0.25em; }
+  .note-body li::marker { color: var(--muted); }
+
+  .note-body ul[data-type="taskList"] {
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .note-body ul[data-type="taskList"] li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .note-body ul[data-type="taskList"] li > label {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    height: 1.6em;
+  }
+
+  /* Widen the 18px box's hit area to 44px across, and to the row's height so
+     neighbouring rows never overlap. */
+  .note-body ul[data-type="taskList"] li > label::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 50%;
+    width: 44px;
+    transform: translateX(-50%);
+  }
+
+  /* On touch screens, to-do rows grow to a full 44px target. */
+  @media (pointer: coarse) {
+    .note-body ul[data-type="taskList"] li > label {
+      height: 44px;
+    }
+
+    .note-body ul[data-type="taskList"] li > div {
+      padding-top: calc((44px - 1.6em) / 2);
+    }
+  }
+
+  .note-body ul[data-type="taskList"] input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--a);
+    cursor: pointer;
+  }
+
+  .note-body ul[data-type="taskList"] li > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .note-body ul[data-type="taskList"] li[data-checked="true"] > div {
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  .note-body p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    color: var(--muted);
+    pointer-events: none;
   }
 }

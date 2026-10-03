@@ -30,7 +30,7 @@ pnpm lint
 
 ## How it's put together
 
-Next.js (App Router), React, TypeScript, Tailwind.
+Next.js (App Router), React, TypeScript, Tailwind, Tiptap for the note editor.
 
 ```
 src/
@@ -55,6 +55,7 @@ src/
     ProjectControls.tsx  next step, stage and live switch, shared by card and page
     ProjectPage.tsx   /project/[id]
     NotePage.tsx      /note/[id]
+    NoteEditor.tsx    the Tiptap editor: toolbar, Markdown shortcuts, autosave
     NoteList.tsx      a Notes section: New note and the list
     BackLink.tsx      back through history, or to the parent page
   lib/

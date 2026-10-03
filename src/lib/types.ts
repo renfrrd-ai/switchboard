@@ -1,3 +1,5 @@
+import type { JSONContent } from "@tiptap/react";
+
 export type AreaId =
   | "school"
   | "products"
@@ -42,7 +44,7 @@ export interface Note {
   area: AreaId | null;
   title: string;
   /** The editor's document as JSON. Null until the body is first edited. */
-  body: object | null;
+  body: JSONContent | null;
   /** Plain-text copy of the body, kept for search. */
   text: string;
   /** ISO timestamps. */

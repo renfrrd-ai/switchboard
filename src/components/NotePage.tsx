@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { AREA_BY_ID } from "@/lib/areas";
-import { editedLabel, todayISO } from "@/lib/dates";
 import { removeNote, updateNote, useNotes } from "@/lib/notes";
 import { useBoard } from "@/lib/store";
 import { BackLink } from "./BackLink";
 import { TrashIcon } from "./icons";
+import { NoteEditor } from "./NoteEditor";
 import { NotFound } from "./NotFound";
 import { PageShell } from "./PageShell";
 
@@ -15,6 +16,7 @@ export function NotePage({ id }: { id: string }) {
   const router = useRouter();
   const board = useBoard();
   const notes = useNotes();
+  const [saving, setSaving] = useState(false);
   if (!board || !notes) return <PageShell />;
 
   const note = notes.find((n) => n.id === id);
@@ -57,8 +59,8 @@ export function NotePage({ id }: { id: string }) {
               <span className="dot" />
               <span className="truncate">{parentLabel}</span>
             </Link>
-            <span className="font-mono text-xs text-muted">
-              {editedLabel(note.updatedAt, todayISO())}
+            <span className="font-mono text-xs text-muted" aria-live="polite">
+              {saving ? "Saving…" : "Saved"}
             </span>
           </div>
           <input
@@ -69,8 +71,16 @@ export function NotePage({ id }: { id: string }) {
             autoFocus={!note.title && !note.text}
             value={note.title}
             onChange={(e) => updateNote(note.id, { title: e.target.value })}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                document.querySelector<HTMLElement>(".note-body")?.focus();
+              }
+            }}
           />
         </div>
+
+        <NoteEditor note={note} onSavingChange={setSaving} />
       </article>
     </PageShell>
   );
