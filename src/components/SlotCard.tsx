@@ -17,24 +17,29 @@ export function SlotCard({
 }) {
   return (
     <article
-      className={`area-${project.area} flex min-w-0 flex-col gap-4 rounded-3xl bg-area-soft p-5 md:gap-[18px] md:rounded-[28px] md:p-7 lg:min-h-[300px]`}
+      className={`area-${project.area} flex min-w-0 flex-col gap-4 rounded-3xl bg-area-soft p-5 md:gap-[18px] md:rounded-[28px] md:p-7 lg:min-h-[340px]`}
     >
       <div className="flex items-center justify-between">
         <span className="inline-flex items-center gap-2 text-[13px] font-semibold text-area-ink">
           <span className="dot" />
           {AREA_BY_ID[project.area].label}
         </span>
-        <span className="font-mono text-[13px] text-area-ink">{number}</span>
+        <span className="font-display text-[28px] leading-none font-[750] text-area-ink">
+          {number}
+        </span>
       </div>
 
-      <h2 className="font-display text-[28px] leading-[1.05] font-bold tracking-[-0.02em] md:text-[32px]">
-        <Link
-          href={`/project/${project.id}`}
-          className="-my-2 inline-block py-2 decoration-2 underline-offset-4 hover:underline"
-        >
-          {project.name || "Untitled"}
-        </Link>
-      </h2>
+      <div className="flex flex-col gap-1.5">
+        <h2 className="font-display text-[28px] leading-[1.05] font-bold tracking-[-0.02em] md:text-[32px]">
+          <Link
+            href={`/project/${project.id}`}
+            className="-my-2 inline-block py-2 decoration-2 underline-offset-4 hover:underline"
+          >
+            {project.name || "Untitled"}
+          </Link>
+        </h2>
+        {project.note && <p className="text-sm text-muted">{project.note}</p>}
+      </div>
 
       <div className="mt-auto flex flex-col gap-2">
         <div className="flex min-h-6 items-center justify-between gap-2">
@@ -68,9 +73,9 @@ export function SlotCard({
 
 export function EmptySlot({ number }: { number: string }) {
   return (
-    <div className="flex min-h-[180px] min-w-0 flex-col gap-4 rounded-3xl border-2 border-dashed border-line p-5 md:gap-[18px] md:rounded-[28px] md:p-7 lg:min-h-[300px]">
+    <div className="flex min-h-[180px] min-w-0 flex-col gap-4 rounded-3xl border-2 border-dashed border-line p-5 md:gap-[18px] md:rounded-[28px] md:p-7 lg:min-h-[340px]">
       <div className="flex justify-end">
-        <span className="font-mono text-[13px] text-muted">{number}</span>
+        <span className="font-display text-[28px] leading-none font-[750] text-muted">{number}</span>
       </div>
       <div className="my-auto flex flex-col gap-1.5">
         <div className="font-display text-[26px] font-bold tracking-[-0.02em]">Open slot</div>

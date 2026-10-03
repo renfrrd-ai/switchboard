@@ -28,7 +28,7 @@ export function Switchboard() {
       <Tabs tab={tab} onChange={setTab} board={board} />
       {board &&
         (tab === "home" ? (
-          <Home board={board} />
+          <Home board={board} onOpenArea={setTab} />
         ) : (
           <AreaView key={tab} board={board} areaId={tab} />
         ))}

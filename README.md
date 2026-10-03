@@ -47,7 +47,7 @@ src/
   components/
     Switchboard.tsx   top level: tabs and current view; the tab lives in ?tab=
     PageShell.tsx     page frame and header, shared by every page
-    Home.tsx          headline, the three slots, deadlines
+    Home.tsx          headline, the three slots, deadlines, area tiles
     SlotCard.tsx      one live project
     ComingUp.tsx      deadlines, with add and remove
     AreaView.tsx      one area's projects

@@ -14,7 +14,7 @@ export function ComingUp({ upcoming }: { upcoming: UpcomingDeadline[] }) {
   const more = upcoming.length - shown.length;
 
   return (
-    <section className="flex min-w-0 flex-col gap-[18px] rounded-[28px] border border-line bg-surface p-5 md:p-6">
+    <div className="flex min-w-0 flex-[1_1_300px] flex-col gap-[18px] rounded-[28px] border border-line bg-surface p-6">
       <div className="flex items-center justify-between gap-3">
         <h2 className="font-display text-xl font-bold tracking-[-0.01em]">Coming up</h2>
         <button
@@ -30,52 +30,48 @@ export function ComingUp({ upcoming }: { upcoming: UpcomingDeadline[] }) {
         <p className="text-sm text-muted">No deadlines ahead.</p>
       )}
 
-      {shown.length > 0 && (
-        <div className={`grid gap-[18px] ${editing ? "" : "lg:grid-cols-3 lg:gap-6"}`}>
-          {shown.map((d) => {
-            const parts = dateParts(d.date);
-            return (
-              <div key={d.id} className="flex items-center gap-3.5">
-                <div className="flex h-14 w-[52px] flex-none flex-col items-center justify-center gap-[3px] rounded-[14px] bg-bg">
-                  <span className="font-display text-xl leading-none font-bold">{parts.day}</span>
-                  <span className="font-mono text-[10px] tracking-[0.08em] text-muted uppercase">
-                    {parts.month}
-                  </span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="font-semibold">{d.label}</div>
-                  {d.source && <div className="text-[13px] text-muted">{d.source}</div>}
-                </div>
-                {editing ? (
-                  <button
-                    type="button"
-                    className="btn btn-quiet btn-round text-muted"
-                    aria-label={`Remove ${d.label}`}
-                    onClick={() => removeDeadline(d.id)}
-                  >
-                    <CloseIcon />
-                  </button>
-                ) : (
-                  <span
-                    className={`font-mono text-xs whitespace-nowrap ${
-                      d.soon ? "font-medium text-warn" : "text-muted"
-                    }`}
-                  >
-                    {dueLabel(d.daysLeft)}
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {shown.map((d) => {
+        const parts = dateParts(d.date);
+        return (
+          <div key={d.id} className="flex items-center gap-3.5">
+            <div className="flex h-14 w-[52px] flex-none flex-col items-center justify-center gap-[3px] rounded-[14px] bg-bg">
+              <span className="font-display text-xl leading-none font-bold">{parts.day}</span>
+              <span className="font-mono text-[10px] tracking-[0.08em] text-muted uppercase">
+                {parts.month}
+              </span>
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="font-semibold">{d.label}</div>
+              {d.source && <div className="text-[13px] text-muted">{d.source}</div>}
+            </div>
+            {editing ? (
+              <button
+                type="button"
+                className="btn btn-quiet btn-round text-muted"
+                aria-label={`Remove ${d.label}`}
+                onClick={() => removeDeadline(d.id)}
+              >
+                <CloseIcon />
+              </button>
+            ) : (
+              <span
+                className={`font-mono text-xs whitespace-nowrap ${
+                  d.soon ? "font-medium text-warn" : "text-muted"
+                }`}
+              >
+                {dueLabel(d.daysLeft)}
+              </span>
+            )}
+          </div>
+        );
+      })}
 
       {more > 0 && (
         <div className="font-mono text-xs text-muted">{more} more after that</div>
       )}
 
       {editing && <AddDeadline />}
-    </section>
+    </div>
   );
 }
 
