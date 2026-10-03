@@ -17,15 +17,15 @@ These numbers live in `src/lib/areas.ts`.
 ## Run it
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Open http://localhost:3000.
 
 ```bash
-npm run build   # production build
-npm run lint
+pnpm build       # production build
+pnpm lint
 ```
 
 ## How it's put together
