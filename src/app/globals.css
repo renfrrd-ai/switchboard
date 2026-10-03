@@ -103,8 +103,9 @@ button:disabled {
   outline-offset: 2px;
 }
 
-/* The caret shows focus in the note editor; a ring around the whole page of text is noise. */
-.note-body:focus-visible {
+/* The caret shows focus in the note editor and the search field; a ring around them is noise. */
+.note-body:focus-visible,
+.search-field:focus-visible {
   outline: none;
 }
 

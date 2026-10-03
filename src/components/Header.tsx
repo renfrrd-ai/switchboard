@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { openSearch } from "@/lib/search";
 import { setTheme, useTheme } from "@/lib/theme";
-import { Logo, MoonIcon, SunIcon } from "./icons";
+import { Logo, MoonIcon, SearchIcon, SunIcon } from "./icons";
 
 export function Header() {
   const theme = useTheme();
@@ -14,14 +15,26 @@ export function Header() {
         <Logo />
         <div className="font-display text-[19px] font-bold tracking-[-0.01em]">Switchboard</div>
       </Link>
-      <button
-        type="button"
-        className="btn btn-round"
-        aria-label={`Switch to ${next} mode`}
-        onClick={() => setTheme(next)}
-      >
-        {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          className="btn btn-round"
+          aria-label="Search"
+          aria-keyshortcuts="Control+K Meta+K"
+          title="Search (Ctrl K or ⌘K)"
+          onClick={openSearch}
+        >
+          <SearchIcon />
+        </button>
+        <button
+          type="button"
+          className="btn btn-round"
+          aria-label={`Switch to ${next} mode`}
+          onClick={() => setTheme(next)}
+        >
+          {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+        </button>
+      </div>
     </header>
   );
 }

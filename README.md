@@ -56,6 +56,7 @@ src/
     ProjectPage.tsx   /project/[id]
     NotePage.tsx      /note/[id]
     NoteEditor.tsx    the Tiptap editor: toolbar, Markdown shortcuts, autosave
+    SearchPalette.tsx Cmd/Ctrl+K: search projects and notes, jump to one
     NoteList.tsx      a Notes section: New note and the list
     BackLink.tsx      back through history, or to the parent page
   lib/
@@ -64,6 +65,7 @@ src/
     store.ts          the board: every read and write goes through here
     notes.ts          notes, same pattern, own storage key
     nav.ts            whether Back has somewhere in the app to go
+    search.ts         matching and ranking for the search palette
     derive.ts         stale, upcoming deadlines, counts
     dates.ts          date maths and labels
     seed.ts           first-run data

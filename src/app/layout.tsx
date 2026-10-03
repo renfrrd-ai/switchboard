@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "@fontsource-variable/bricolage-grotesque";
 import { NavTracker } from "@/components/NavTracker";
+import { SearchPalette } from "@/components/SearchPalette";
 import { SITE } from "@/lib/site";
 import { themeBootScript } from "@/lib/theme-boot";
 import "./globals.css";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-dvh font-sans">
         <NavTracker />
         {children}
+        <SearchPalette />
       </body>
     </html>
   );
