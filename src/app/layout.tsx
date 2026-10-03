@@ -2,13 +2,37 @@ import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "@fontsource-variable/bricolage-grotesque";
+import { SITE } from "@/lib/site";
 import { themeBootScript } from "@/lib/theme-boot";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Switchboard",
-  description: "Every project in one place, three live at a time, one next step each.",
-  appleWebApp: { capable: true, title: "Switchboard", statusBarStyle: "default" },
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: `${SITE.name} — ${SITE.tagline}`,
+    template: `%s · ${SITE.name}`,
+  },
+  description: SITE.description,
+  applicationName: SITE.name,
+  keywords: SITE.keywords,
+  category: "productivity",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: SITE.name,
+    title: SITE.name,
+    description: SITE.tagline,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE.name,
+    description: SITE.tagline,
+  },
+  robots: { index: true, follow: true },
+  formatDetection: { telephone: false, email: false, address: false },
+  appleWebApp: { capable: true, title: SITE.name, statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

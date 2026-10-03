@@ -35,9 +35,12 @@ Next.js (App Router), React, TypeScript, Tailwind.
 ```
 src/
   app/
-    layout.tsx        fonts, theme boot script, metadata
-    page.tsx          renders <Switchboard />
+    layout.tsx        fonts, theme boot script, metadata (SEO, Open Graph, Twitter)
+    page.tsx          renders <Switchboard /> plus JSON-LD structured data
     manifest.ts       web app manifest (name, icons, standalone display)
+    opengraph-image.tsx  1200×630 share image, built at build time
+    robots.ts, sitemap.ts
+    favicon.ico, icon.svg, apple-icon.png
     globals.css       colour tokens for light and dark, area colours, shared pieces
   components/
     Switchboard.tsx   top level: header, tabs, current view
@@ -54,9 +57,17 @@ src/
     dates.ts          date maths and labels
     seed.ts           first-run data
     theme.ts          light and dark mode
+    site.ts           name, copy and URL shared by metadata and the share image
+public/
+  icon-*.png          PWA icons (regular and maskable)
+  brand/              logo files: icon, mark and wordmark, SVG and PNG, dark and white
 supabase/
   schema.sql          tables for the hosted database (not wired up yet)
 ```
+
+## Deploying
+
+Set `NEXT_PUBLIC_SITE_URL` to the production URL (e.g. `https://switchboard.example.com`). Canonical links, Open Graph URLs, `robots.txt` and the sitemap are built from it. On Vercel it falls back to the production domain automatically; elsewhere it falls back to `http://localhost:3000`.
 
 ## Where the data lives right now
 
