@@ -71,3 +71,25 @@ $$;
 create trigger projects_active_slots
   before insert or update of active, area on public.projects
   for each row execute function public.enforce_active_slots();
+
+-- Notes belong to exactly one project or one area. Deleting a project deletes its notes.
+create table public.notes (
+  id          uuid primary key default gen_random_uuid(),
+  user_id     uuid not null default auth.uid() references auth.users (id) on delete cascade,
+  project_id  uuid references public.projects (id) on delete cascade,
+  area        text check (area in ('school', 'products', 'builds', 'content', 'commitments', 'personal')),
+  title       text not null default '',
+  body        jsonb,                      -- the editor's document (Tiptap JSON)
+  body_text   text not null default '',   -- plain-text copy for search (`text` in the app)
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now(),
+  check ((project_id is null) <> (area is null))
+);
+
+create index notes_user_project_idx on public.notes (user_id, project_id);
+create index notes_user_area_idx on public.notes (user_id, area);
+
+alter table public.notes enable row level security;
+
+create policy "own notes" on public.notes
+  for all using (user_id = auth.uid()) with check (user_id = auth.uid());

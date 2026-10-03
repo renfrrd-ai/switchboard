@@ -3,13 +3,16 @@
 import { useState } from "react";
 import { AREA_BY_ID, MAX_ACTIVE } from "@/lib/areas";
 import { todayISO } from "@/lib/dates";
+import { areaNotes, useNotes } from "@/lib/notes";
 import { activeCount, addProject } from "@/lib/store";
 import type { AreaId, Board } from "@/lib/types";
 import { PlusIcon } from "./icons";
+import { NoteList } from "./NoteList";
 import { ProjectCard } from "./ProjectCard";
 
 export function AreaView({ board, areaId }: { board: Board; areaId: AreaId }) {
   const [freshId, setFreshId] = useState<string | null>(null);
+  const notes = useNotes();
   const area = AREA_BY_ID[areaId];
   const today = todayISO();
   const projects = board.projects.filter((p) => p.area === areaId);
@@ -67,6 +70,14 @@ export function AreaView({ board, areaId }: { board: Board; areaId: AreaId }) {
           </div>
           <p className="text-sm text-muted">Add the first thing you want to keep an eye on.</p>
         </div>
+      )}
+
+      {notes && (
+        <NoteList
+          notes={areaNotes(notes, areaId)}
+          owner={{ area: areaId }}
+          emptyText={`Notes about ${area.label} that aren't about one project go here.`}
+        />
       )}
     </section>
   );

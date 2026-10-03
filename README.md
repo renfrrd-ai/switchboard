@@ -37,22 +37,32 @@ src/
   app/
     layout.tsx        fonts, theme boot script, metadata (SEO, Open Graph, Twitter)
     page.tsx          renders <Switchboard /> plus JSON-LD structured data
+    project/[id]/     a project's page: its controls and its notes
+    note/[id]/        a note
     manifest.ts       web app manifest (name, icons, standalone display)
     opengraph-image.tsx  1200×630 share image, built at build time
     robots.ts, sitemap.ts
     favicon.ico, icon.svg, apple-icon.png
     globals.css       colour tokens for light and dark, area colours, shared pieces
   components/
-    Switchboard.tsx   top level: header, tabs, current view
+    Switchboard.tsx   top level: tabs and current view; the tab lives in ?tab=
+    PageShell.tsx     page frame and header, shared by every page
     Home.tsx          headline, the three slots, deadlines, area tiles
     SlotCard.tsx      one live project
     ComingUp.tsx      deadlines, with add and remove
     AreaView.tsx      one area's projects
     ProjectCard.tsx   one project: name, next step, stage, live switch
+    ProjectControls.tsx  next step, stage and live switch, shared by card and page
+    ProjectPage.tsx   /project/[id]
+    NotePage.tsx      /note/[id]
+    NoteList.tsx      a Notes section: New note and the list
+    BackLink.tsx      back through history, or to the parent page
   lib/
     types.ts          Project, Deadline, Board
     areas.ts          the areas, stages and the rules' numbers
     store.ts          the board: every read and write goes through here
+    notes.ts          notes, same pattern, own storage key
+    nav.ts            whether Back has somewhere in the app to go
     derive.ts         stale, upcoming deadlines, counts
     dates.ts          date maths and labels
     seed.ts           first-run data
@@ -76,6 +86,8 @@ In the browser's local storage, on the device you're using. That means:
 - It survives reloads and restarts.
 - It does **not** sync between your phone and your PC yet.
 - Clearing site data for the app wipes it.
+
+The board and the notes are saved under separate keys (`switchboard:board:v1` and `switchboard:notes:v1`). A note belongs to one project or one area. Deleting a project deletes its notes.
 
 On first run the board is filled from `src/lib/seed.ts`. After that, the saved board wins and the seed is ignored. To start over from the seed, clear the site's local storage.
 

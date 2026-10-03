@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { setTheme, useTheme } from "@/lib/theme";
 import { Logo, MoonIcon, SunIcon } from "./icons";
 
@@ -9,10 +10,10 @@ export function Header() {
 
   return (
     <header className="flex items-center justify-between gap-3">
-      <div className="flex items-center gap-2.5">
+      <Link href="/" className="-m-1.5 flex min-h-11 items-center gap-2.5 rounded-xl p-1.5">
         <Logo />
         <div className="font-display text-[19px] font-bold tracking-[-0.01em]">Switchboard</div>
-      </div>
+      </Link>
       <button
         type="button"
         className="btn btn-round"

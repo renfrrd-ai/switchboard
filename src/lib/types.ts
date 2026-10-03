@@ -32,6 +32,24 @@ export interface Deadline {
   source: string;
 }
 
+/**
+ * A note belongs to exactly one project or one area: one of `projectId` and
+ * `area` is set and the other is null.
+ */
+export interface Note {
+  id: string;
+  projectId: string | null;
+  area: AreaId | null;
+  title: string;
+  /** The editor's document as JSON. Null until the body is first edited. */
+  body: object | null;
+  /** Plain-text copy of the body, kept for search. */
+  text: string;
+  /** ISO timestamps. */
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Board {
   projects: Project[];
   deadlines: Deadline[];

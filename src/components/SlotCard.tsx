@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AREA_BY_ID } from "@/lib/areas";
 import { touchedLabel } from "@/lib/dates";
 import { daysSinceTouched, isStale } from "@/lib/derive";
@@ -30,7 +31,12 @@ export function SlotCard({
 
       <div className="flex flex-col gap-1.5">
         <h2 className="font-display text-[32px] leading-[1.05] font-bold tracking-[-0.02em]">
-          {project.name || "Untitled"}
+          <Link
+            href={`/project/${project.id}`}
+            className="-my-1.5 inline-block py-1.5 decoration-2 underline-offset-4 hover:underline"
+          >
+            {project.name || "Untitled"}
+          </Link>
         </h2>
         {project.note && <p className="text-sm text-muted">{project.note}</p>}
       </div>

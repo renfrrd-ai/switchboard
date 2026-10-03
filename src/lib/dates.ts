@@ -47,3 +47,12 @@ export function dueLabel(days: number): string {
   if (days === 1) return "tomorrow";
   return `in ${days} days`;
 }
+
+/** "edited today", "edited yesterday", or "edited Tue, Oct 6", from an ISO timestamp. */
+export function editedLabel(timestamp: string, today: string): string {
+  const day = todayISO(new Date(timestamp));
+  const days = daysBetween(day, today);
+  if (days <= 0) return "edited today";
+  if (days === 1) return "edited yesterday";
+  return `edited ${formatDate(day)}`;
+}

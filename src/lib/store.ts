@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { MAX_ACTIVE, isAlwaysOn } from "./areas";
 import { todayISO } from "./dates";
+import { removeProjectNotes } from "./notes";
 import { seedBoard } from "./seed";
 import type { AreaId, Board, Deadline, Project } from "./types";
 
@@ -119,9 +120,11 @@ export function addProject(area: AreaId): string {
   return project.id;
 }
 
+/** Deletes the project and every note filed under it. */
 export function removeProject(id: string) {
   const b = current();
   commit({ ...b, projects: b.projects.filter((p) => p.id !== id) });
+  removeProjectNotes(id);
 }
 
 export function addDeadline(input: Omit<Deadline, "id">) {

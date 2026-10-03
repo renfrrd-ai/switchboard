@@ -1,20 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { AREA_BY_ID } from "@/lib/areas";
 import { useBoard } from "@/lib/store";
-import type { TabId } from "@/lib/types";
+import type { AreaId, TabId } from "@/lib/types";
 import { AreaView } from "./AreaView";
-import { Header } from "./Header";
 import { Home } from "./Home";
+import { PageShell } from "./PageShell";
 import { Tabs } from "./Tabs";
+
+/** The tab lives in the URL (?tab=products) so Back from a project or note lands on it. */
+function useTab(): [TabId, (tab: TabId) => void] {
+  const router = useRouter();
+  const param = useSearchParams().get("tab");
+  const tab: TabId = param && param in AREA_BY_ID ? (param as AreaId) : "home";
+  const setTab = (next: TabId) =>
+    router.push(next === "home" ? "/" : `/?tab=${next}`, { scroll: false });
+  return [tab, setTab];
+}
 
 export function Switchboard() {
   const board = useBoard();
-  const [tab, setTab] = useState<TabId>("home");
+  const [tab, setTab] = useTab();
 
   return (
-    <div className="mx-auto flex max-w-[1120px] flex-col gap-7 px-4 pt-4 pb-14 md:gap-10 md:px-8 md:pt-8 md:pb-20">
-      <Header />
+    <PageShell>
       <Tabs tab={tab} onChange={setTab} board={board} />
       {board &&
         (tab === "home" ? (
@@ -22,6 +32,6 @@ export function Switchboard() {
         ) : (
           <AreaView key={tab} board={board} areaId={tab} />
         ))}
-    </div>
+    </PageShell>
   );
 }

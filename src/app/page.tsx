@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { PageShell } from "@/components/PageShell";
 import { Switchboard } from "@/components/Switchboard";
 import { SITE } from "@/lib/site";
 
@@ -21,7 +23,10 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <Switchboard />
+      {/* The tab comes from the URL, which is only known in the browser. */}
+      <Suspense fallback={<PageShell />}>
+        <Switchboard />
+      </Suspense>
     </>
   );
 }

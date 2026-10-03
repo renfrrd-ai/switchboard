@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "@fontsource-variable/bricolage-grotesque";
+import { NavTracker } from "@/components/NavTracker";
 import { SITE } from "@/lib/site";
 import { themeBootScript } from "@/lib/theme-boot";
 import "./globals.css";
@@ -52,7 +53,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
-      <body className="min-h-dvh font-sans">{children}</body>
+      <body className="min-h-dvh font-sans">
+        <NavTracker />
+        {children}
+      </body>
     </html>
   );
 }
