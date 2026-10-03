@@ -1,26 +1,244 @@
 @import "tailwindcss";
 
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f2f3f6;
+  --surface: #ffffff;
+  --sunk: #e6e9ee;
+  --ink: #0e1218;
+  --muted: #55606e;
+  --line: #dce1e8;
+  --focus: #2f6bff;
+  --warn: #8a3d00;
+  --on-warn: #ffffff;
+  --sw-off: #8a94a1;
+
+  /* Area colour. Neutral by default; an .area-* class overrides it. */
+  --a: #0e1218;
+  --a-soft: #e6e9ee;
+  --a-ink: #0e1218;
 }
+
+[data-theme="dark"] {
+  --bg: #0a0d12;
+  --surface: #141920;
+  --sunk: #1c232c;
+  --ink: #eef1f5;
+  --muted: #9ba6b3;
+  --line: #27303a;
+  --focus: #8fb0ff;
+  --warn: #ffbe85;
+  --on-warn: #2a1600;
+  --sw-off: #5a6675;
+
+  --a: #eef1f5;
+  --a-soft: #1c232c;
+  --a-ink: #eef1f5;
+}
+
+.area-school { --a: #2f6bff; --a-soft: #dce8ff; --a-ink: #1740b8; }
+.area-products { --a: #8b5cf6; --a-soft: #ebe2ff; --a-ink: #5b21b6; }
+.area-builds { --a: #e07310; --a-soft: #ffe9cc; --a-ink: #8a3d00; }
+.area-content { --a: #0d9488; --a-soft: #d3f3ec; --a-ink: #0b5f58; }
+.area-commitments { --a: #ec4899; --a-soft: #ffe0ec; --a-ink: #a3154f; }
+.area-personal { --a: #b88a00; --a-soft: #fbf0c4; --a-ink: #5c4700; }
+
+[data-theme="dark"] .area-school { --a: #5b8cff; --a-soft: #16264d; --a-ink: #a9c4ff; }
+[data-theme="dark"] .area-products { --a: #a78bfa; --a-soft: #2a1f4d; --a-ink: #cdb8ff; }
+[data-theme="dark"] .area-builds { --a: #f59e42; --a-soft: #3d2609; --a-ink: #ffc78a; }
+[data-theme="dark"] .area-content { --a: #2dd4bf; --a-soft: #0f3530; --a-ink: #7fe3d3; }
+[data-theme="dark"] .area-commitments { --a: #f472b6; --a-soft: #45152b; --a-ink: #ffa8cb; }
+[data-theme="dark"] .area-personal { --a: #e3b81e; --a-soft: #3a3008; --a-ink: #f0d879; }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-sunk: var(--sunk);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-focus: var(--focus);
+  --color-warn: var(--warn);
+  --color-on-warn: var(--on-warn);
+  --color-sw-off: var(--sw-off);
+  --color-area: var(--a);
+  --color-area-soft: var(--a-soft);
+  --color-area-ink: var(--a-ink);
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display:
+    "Bricolage Grotesque Variable", var(--font-geist-sans), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ───────────────────────────────────────────────────────────────── */
+
+html {
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ── Shared pieces ──────────────────────────────────────────────────────── */
+
+@layer components {
+  .dot {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--a);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .btn:hover:not(:disabled) {
+    border-color: var(--muted);
+  }
+
+  .btn-solid {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .btn-quiet {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .btn-quiet:hover:not(:disabled) {
+    border-color: var(--ink);
+  }
+
+  .btn-round {
+    width: 44px;
+    padding: 0;
+  }
+
+  .field {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--ink);
+    font-size: 15px;
+  }
+
+  .field::placeholder {
+    color: var(--muted);
+  }
+
+  .field:focus {
+    border-color: var(--focus);
+    outline: none;
+  }
+
+  .field-boxed {
+    border-color: var(--line);
+    background: var(--bg);
+  }
+
+  .autogrow {
+    display: grid;
+    min-width: 0;
+    flex: 1;
+    --grow-px: 12px;
+    --grow-py: 11px;
+  }
+
+  .autogrow::after {
+    content: attr(data-value) " ";
+    visibility: hidden;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .autogrow > textarea,
+  .autogrow::after {
+    grid-area: 1 / 1;
+    min-width: 0;
+    padding: var(--grow-py) var(--grow-px);
+    border: 1px solid transparent;
+    border-radius: inherit;
+    font: inherit;
+  }
+
+  .autogrow > textarea {
+    width: 100%;
+    overflow: hidden;
+    resize: none;
+    background: transparent;
+    color: inherit;
+    overflow-wrap: anywhere;
+  }
+
+  .autogrow > textarea::placeholder {
+    color: var(--muted);
+  }
+
+  .autogrow > textarea:focus {
+    border-color: var(--focus);
+    outline: none;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0 10px;
+    border-radius: 12px;
+    background: var(--warn);
+    color: var(--on-warn);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
 }
